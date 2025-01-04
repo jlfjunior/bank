@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<TransactionService>();
+
 builder.Services.AddDbContext<Context>(options => options.UseInMemoryDatabase("TransactionsInMemoryDatabase"));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -21,11 +23,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/transactions", () =>
+app.MapPost("/transactions", async (TransactionRequest request, TransactionService service) =>
     {
-        return Enumerable.Empty<TransactionResponse>();
+        TransactionResponse response = await service.CreateAsync(request);
+        
+        return response;
     })
-    .WithName("ListTransactions")
+    .WithName("CreateTransaction")
     .WithOpenApi();
 
 app.Run();
