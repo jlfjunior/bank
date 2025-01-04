@@ -18,6 +18,16 @@ public record AccountResponse
     public string Mobile { get; set; }
 }
 
+public record AccountCreatedEvent
+{
+    public Guid AccountId { get; set; }
+    public string FullName { get; set; }
+    public string TaxDocumentId { get; set; }
+    public string Mobile { get; set; }
+    public Guid EventId { get; set; }
+    public DateTime Timestamp { get; set; }
+}
+
 public record AccountRequest
 {
     public string FullName { get; set; }
@@ -56,7 +66,16 @@ public class AccountService
         };
         
         //TODO: Dispatch AccountCreatedEvent
-        
+        AccountCreatedEvent accountCreated = new AccountCreatedEvent
+        {
+            AccountId = account.Id,
+            FullName = account.FullName,
+            TaxDocumentId = account.TaxDocumentId,
+            Mobile = account.Mobile,
+            
+            EventId = Guid.NewGuid(),
+            Timestamp = DateTime.UtcNow
+        };
         return response;
     }
 
