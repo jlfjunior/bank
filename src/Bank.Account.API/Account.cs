@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Bank.Account.API;
 
 public class Account
@@ -56,5 +58,29 @@ public class AccountService
         //TODO: Dispatch AccountCreatedEvent
         
         return response;
+    }
+
+    public async Task<List<AccountResponse>> GetAllAsync()
+    {
+        var accounts = await _context.Accounts
+            .ToListAsync();
+
+        var response = new List<AccountResponse>();
+        
+        foreach (var account in accounts)
+        {
+            var accountResponse = new AccountResponse
+            {
+                Id = account.Id,
+                FullName = account.FullName,
+                TaxDocumentId = account.TaxDocumentId,
+                Mobile = account.Mobile,
+            };
+            
+            response.Add(accountResponse);
+        }
+        
+        return response;
+            
     }
 }

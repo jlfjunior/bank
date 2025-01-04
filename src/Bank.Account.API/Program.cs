@@ -32,18 +32,9 @@ app.MapPost("/accounts", async (AccountRequest request, AccountService service) 
     .WithName("CreateAccount")
     .WithOpenApi();
 
-app.MapGet("/accounts", () =>
+app.MapGet("/accounts", async (AccountService service) =>
     {
-        var accounts = new List<AccountResponse>
-        { 
-            new AccountResponse 
-            {
-                Id = Guid.NewGuid(),
-                FullName = "John Doe",
-                TaxDocumentId = "0123456789",
-                Mobile = "79912345678",
-            }
-        };
+        var accounts = await service.GetAllAsync();
         
         return accounts;
     })
