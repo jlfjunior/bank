@@ -1,8 +1,13 @@
 using Bank.Account.API;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<AccountService>();
+
+builder.Services.AddDbContext<Context>(options => options.UseInMemoryDatabase("InMemoryDatabase"));
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -18,23 +23,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapPost("/accounts", (AccountRequest request) =>
+app.MapPost("/accounts", async (AccountRequest request, AccountService service) =>
     {
-        Account account = new Account
-        {
-            Id = Guid.NewGuid(),
-            FullName = request.FullName,
-            TaxDocumentId = request.TaxDocumentId,
-            Mobile = request.Mobile
-        };
-
-        AccountResponse response = new AccountResponse
-        {
-            Id = account.Id,
-            FullName = account.FullName,
-            TaxDocumentId = account.TaxDocumentId,
-            Mobile = account.Mobile,
-        };
+        var response = await service.CreateAsync(request);
         
         return response;
     })
