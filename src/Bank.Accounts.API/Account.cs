@@ -6,7 +6,7 @@ public class Account
 {
     public Guid Id { get; set; }
     public string FullName { get; set; }
-    public string TaxDocumentId { get; set; }
+    public TaxDocument TaxDocumentId { get; set; }
     public string Mobile { get; set; }
 }
 
@@ -50,7 +50,7 @@ public class AccountService
         {
             Id = Guid.NewGuid(),
             FullName = request.FullName,
-            TaxDocumentId = request.TaxDocumentId,
+            TaxDocumentId = TaxDocument.Create(request.TaxDocumentId),
             Mobile = request.Mobile
         };
         
@@ -61,7 +61,7 @@ public class AccountService
         {
             Id = account.Id,
             FullName = account.FullName,
-            TaxDocumentId = account.TaxDocumentId,
+            TaxDocumentId = account.TaxDocumentId.Value,
             Mobile = account.Mobile,
         };
         
@@ -70,7 +70,7 @@ public class AccountService
         {
             AccountId = account.Id,
             FullName = account.FullName,
-            TaxDocumentId = account.TaxDocumentId,
+            TaxDocumentId = account.TaxDocumentId.Value,
             Mobile = account.Mobile,
             
             EventId = Guid.NewGuid(),
@@ -92,7 +92,7 @@ public class AccountService
             {
                 Id = account.Id,
                 FullName = account.FullName,
-                TaxDocumentId = account.TaxDocumentId,
+                TaxDocumentId = account.TaxDocumentId.Value,
                 Mobile = account.Mobile,
             };
             
