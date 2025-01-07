@@ -18,16 +18,6 @@ public record AccountResponse
     public string Mobile { get; set; }
 }
 
-public record AccountCreatedEvent
-{
-    public Guid AccountId { get; set; }
-    public string FullName { get; set; }
-    public string TaxDocumentId { get; set; }
-    public string Mobile { get; set; }
-    public Guid EventId { get; set; }
-    public DateTime Timestamp { get; set; }
-}
-
 public record AccountRequest
 {
     public string FullName { get; set; }
@@ -46,7 +36,7 @@ public class AccountService
 
     public async Task<AccountResponse> CreateAsync(AccountRequest request)
     {
-        Account account = new Account
+        var account = new Account
         {
             Id = Guid.NewGuid(),
             FullName = request.FullName,
@@ -57,7 +47,7 @@ public class AccountService
         _context.Accounts.Add(account);
         await _context.SaveChangesAsync();
         
-        AccountResponse response = new AccountResponse
+        var response = new AccountResponse
         {
             Id = account.Id,
             FullName = account.FullName,
@@ -65,16 +55,12 @@ public class AccountService
             Mobile = account.Mobile,
         };
         
-        //TODO: Dispatch AccountCreatedEvent
-        AccountCreatedEvent accountCreated = new AccountCreatedEvent
+        var accountCreated = new AccountCreatedEvent
         {
             AccountId = account.Id,
             FullName = account.FullName,
             TaxDocumentId = account.TaxDocumentId.Value,
-            Mobile = account.Mobile,
-            
-            EventId = Guid.NewGuid(),
-            Timestamp = DateTime.UtcNow
+            Mobile = account.Mobile
         };
         return response;
     }
