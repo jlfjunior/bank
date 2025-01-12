@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<AccountService>();
 
-builder.Services.AddDbContext<Context>(options => options.UseInMemoryDatabase("AccountsInMemoryDatabase"));
+var connectionString = builder.Configuration.GetConnectionString("AccountsContext");
+builder.Services.AddDbContext<Context>(options => options.UseNpgsql(connectionString));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -21,6 +21,8 @@ public class TaxDocument
         return other.Value == Value;
     }
 
+    public override string ToString() => Value;
+
     public static bool operator ==(TaxDocument left, TaxDocument right)
     {
         if (ReferenceEquals(left, null) && ReferenceEquals(right, null)) return true;
