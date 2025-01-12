@@ -1,4 +1,5 @@
 using Bank.Accounts.API;
+using Bank.Accounts.API;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
