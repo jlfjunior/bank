@@ -13,24 +13,13 @@ public class AccountService
 
     public async Task<AccountResponse> CreateAsync(AccountRequest request)
     {
-        var account = new Account
-        {
-            Id = Guid.NewGuid(),
-            FullName = request.FullName,
-            TaxDocumentId = TaxDocument.Create(request.TaxDocumentId),
-            Mobile = ContactNumber.Create(request.Mobile)
-        };
+        var account = Account.Create(request.FullName, request.TaxDocumentId, request.Mobile);
         
         _context.Accounts.Add(account);
-        await _context.SaveChangesAsync();
         
-        var response = new AccountResponse
-        {
-            Id = account.Id,
-            FullName = account.FullName,
-            TaxDocumentId = account.TaxDocumentId.Value,
-            Mobile = account.Mobile.Value,
-        };
+        await _context.SaveChangesAsync();
+
+        var response = new AccountResponse(account);
         
         var accountCreated = new AccountCreatedEvent
         {
@@ -39,6 +28,9 @@ public class AccountService
             TaxDocumentId = account.TaxDocumentId.Value,
             Mobile = account.Mobile.Value
         };
+        
+        //TODO: Notify payment system to create a new account
+        
         return response;
     }
 
@@ -50,19 +42,8 @@ public class AccountService
         var response = new List<AccountResponse>();
         
         foreach (var account in accounts)
-        {
-            var accountResponse = new AccountResponse
-            {
-                Id = account.Id,
-                FullName = account.FullName,
-                TaxDocumentId = account.TaxDocumentId.Value,
-                Mobile = account.Mobile.Value,
-            };
-            
-            response.Add(accountResponse);
-        }
+            response.Add(new AccountResponse(account));
         
         return response;
-            
     }
 }
