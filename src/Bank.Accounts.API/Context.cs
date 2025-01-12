@@ -18,6 +18,10 @@ public class Context : DbContext
             .HasConversion(
                 taxDocument => taxDocument.Value,
                 value => TaxDocument.Create(value));
+        modelBuilder.Entity<Account>().Property(account => account.Mobile)
+            .HasConversion(
+                contactNumber => contactNumber.Value,
+                value => ContactNumber.Create(value));
         
         base.OnModelCreating(modelBuilder);
     }

@@ -18,7 +18,7 @@ public class AccountService
             Id = Guid.NewGuid(),
             FullName = request.FullName,
             TaxDocumentId = TaxDocument.Create(request.TaxDocumentId),
-            Mobile = request.Mobile
+            Mobile = ContactNumber.Create(request.Mobile)
         };
         
         _context.Accounts.Add(account);
@@ -29,7 +29,7 @@ public class AccountService
             Id = account.Id,
             FullName = account.FullName,
             TaxDocumentId = account.TaxDocumentId.Value,
-            Mobile = account.Mobile,
+            Mobile = account.Mobile.Value,
         };
         
         var accountCreated = new AccountCreatedEvent
@@ -37,7 +37,7 @@ public class AccountService
             AccountId = account.Id,
             FullName = account.FullName,
             TaxDocumentId = account.TaxDocumentId.Value,
-            Mobile = account.Mobile
+            Mobile = account.Mobile.Value
         };
         return response;
     }
@@ -56,7 +56,7 @@ public class AccountService
                 Id = account.Id,
                 FullName = account.FullName,
                 TaxDocumentId = account.TaxDocumentId.Value,
-                Mobile = account.Mobile,
+                Mobile = account.Mobile.Value,
             };
             
             response.Add(accountResponse);
