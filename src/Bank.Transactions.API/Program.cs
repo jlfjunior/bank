@@ -1,10 +1,11 @@
 using Bank.Transactions.API;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<TransactionService>();
+builder.Services.AddScoped<AccountService>();
 
 builder.Services.AddDbContext<Context>(options => options.UseInMemoryDatabase("TransactionsInMemoryDatabase"));
 
@@ -23,7 +24,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapPost("/transactions", async (TransactionRequest request, TransactionService service) =>
+app.MapPost("accounts", async (AccountRequest request, AccountService service) =>
+    {
+        var response = await service.CreateAccount(request);
+
+        return response;
+    })
+    .WithName("CreateAccount")
+    .WithOpenApi();
+
+
+app.MapPost("/transactions", async (TransactionRequest request, AccountService service) =>
     {
         TransactionResponse response = await service.CreateAsync(request);
         

@@ -1,12 +1,22 @@
 namespace Bank.Transactions.API;
 
-public class TransactionService
+public class AccountService
 {
     readonly Context _context;
 
-    public TransactionService(Context context)
+    public AccountService(Context context)
     {
         _context = context;
+    }
+
+    public async Task<AccountResponse> CreateAccount(AccountRequest request)
+    {
+        var account = Account.Create(request.AccountId);
+        _context.Accounts.Add(account);
+        
+        await _context.SaveChangesAsync();
+        
+        return new AccountResponse(account.Id, account.Balance);
     }
 
     public async Task<TransactionResponse> CreateAsync(TransactionRequest request)
